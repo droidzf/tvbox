@@ -51,6 +51,7 @@ import com.github.tvbox.osc.ui.fragment.PlayFragment;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.IDM;
 import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.util.SubtitleHelper;
@@ -296,19 +297,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String down_url = vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).url;
-                Intent intent = new Intent("android.intent.action.MAIN");
-                if (isPackageInstalled("idm.internet.download.manager.adm.lite", getPackageManager()))
-                    intent.setClassName("idm.internet.download.manager.adm.lite", "idm.internet.download.manager.Downloader");
-                else if (isPackageInstalled("idm.internet.download.manager.plus", getPackageManager()))
-                    intent.setClassName("idm.internet.download.manager.plus", "idm.internet.download.manager.Downloader");
-                else if (isPackageInstalled("idm.internet.download.manager", getPackageManager()))
-                    intent.setClassName("idm.internet.download.manager", "idm.internet.download.manager.Downloader");
-                else {
-                    Toast.makeText(DetailActivity.this, "没有安装1DM+", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                intent.setData(Uri.parse(down_url));
-                startActivity(intent);
+                IDM.Download(DetailActivity.this,down_url);
             }
         });
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
@@ -965,14 +954,7 @@ public class DetailActivity extends BaseActivity {
             showSystemUI();
         }
     }
-    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
-        try {
-            return packageManager.getApplicationInfo(packageName, 0).enabled;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
+
     void toggleSubtitleTextSize() {
         int subtitleTextSize = SubtitleHelper.getTextSize(this);
         if (!fullWindows) {

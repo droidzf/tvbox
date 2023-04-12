@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.util;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 
 import java.util.Stack;
 
@@ -131,6 +132,14 @@ public class AppManager {
         } catch (Exception e) {
             activityStack.clear();
             e.printStackTrace();
+        }
+    }
+    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            return packageManager.getApplicationInfo(packageName, 0).enabled;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 }

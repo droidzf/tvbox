@@ -286,6 +286,7 @@ public class VodController extends BaseController {
     TextView mPlayerTimeStartBtn;
     TextView mPlayerTimeSkipBtn;
     TextView mPlayerTimeStepBtn;
+    TextView mPlayerDownloadBtn;
 
     // parse container
     LinearLayout mParseRoot;
@@ -373,6 +374,7 @@ public class VodController extends BaseController {
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
         mPlayerTimeStepBtn = findViewById(R.id.play_time_step);
+        mPlayerDownloadBtn = findViewById(R.id.play_download);
 
         // parse container
         mParseRoot = findViewById(R.id.parse_root);
@@ -720,6 +722,12 @@ public class VodController extends BaseController {
                 listener.selectAudioTrack();
             }
         });
+        mPlayerDownloadBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.download();
+            }
+        });
         // Button : SKIP time start -----------------------------------------
         mPlayerTimeStartBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -924,6 +932,8 @@ public class VodController extends BaseController {
         void selectAudioTrack();
 
         void openVideo();
+
+        void download();
 
     }
 
