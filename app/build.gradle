@@ -45,7 +45,7 @@ android {
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
             zipAlignEnabled true
             debuggable false

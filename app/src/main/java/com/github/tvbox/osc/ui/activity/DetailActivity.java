@@ -288,17 +288,17 @@ public class DetailActivity extends BaseActivity {
                 //获取剪切板管理器
                 ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 //设置内容到剪切板
-                cm.setPrimaryClip(ClipData.newPlainText(null, vodInfo.seriesMap.get(vodInfo.playFlag).get(0).url));
+                cm.setPrimaryClip(ClipData.newPlainText(null, vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).url));
                 Toast.makeText(DetailActivity.this, getString(R.string.det_url), Toast.LENGTH_SHORT).show();
             }
         });
         tvDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String down_url = vodInfo.seriesMap.get(vodInfo.playFlag).get(0).url;
+                String down_url = vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).url;
                 Intent intent = new Intent("android.intent.action.MAIN");
-                if (isPackageInstalled("idm.internet.download.manager.plus", getPackageManager()))
-                    intent.setClassName("idm.internet.download.manager.plus", "idm.internet.download.manager.Downloader");
+                if (isPackageInstalled("idm.internet.download.manager.adm.lite", getPackageManager()))
+                    intent.setClassName("idm.internet.download.manager.adm.lite", "idm.internet.download.manager.Downloader");
                 else if (isPackageInstalled("idm.internet.download.manager.plus", getPackageManager()))
                     intent.setClassName("idm.internet.download.manager.plus", "idm.internet.download.manager.Downloader");
                 else if (isPackageInstalled("idm.internet.download.manager", getPackageManager()))
@@ -307,8 +307,6 @@ public class DetailActivity extends BaseActivity {
                     Toast.makeText(DetailActivity.this, "没有安装1DM+", Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                intent.putExtra("android.intent.extra.TEXT", down_url);
-//                intent.putExtra("secure_uri", down_url);
                 intent.setData(Uri.parse(down_url));
                 startActivity(intent);
             }
