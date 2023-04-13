@@ -225,9 +225,18 @@ public class DriveActivity extends BaseActivity {
                     // takagen99 - To only play media file
                     if (StorageDriveType.isVideoType(selectedItem.fileType)) {
                         DriveFolderFile currentDrive = viewModel.getCurrentDrive();
-                        if (currentDrive.getDriveType() == StorageDriveType.TYPE.LOCAL)
-                            playFile(currentDrive.name + selectedItem.getAccessingPathStr() + selectedItem.name);
-                        else if (currentDrive.getDriveType() == StorageDriveType.TYPE.WEBDAV) {
+                        if (currentDrive.getDriveType() == StorageDriveType.TYPE.LOCAL) {
+                            List<String> list = new ArrayList<>();
+                            List<DriveFolderFile> items = new ArrayList<>();
+                            for (int i = 0; i < DriveActivity.this.adapter.getData().size(); i++) {
+                                DriveFolderFile item = DriveActivity.this.adapter.getItem(i);
+                                if (StorageDriveType.isVideoType(item.fileType)) {
+                                    list.add(currentDrive.name + item.getAccessingPathStr() + item.name);
+                                    items.add(item);
+                                }
+                            }
+                            playFile(list,items.indexOf(selectedItem));
+                        }else if (currentDrive.getDriveType() == StorageDriveType.TYPE.WEBDAV) {
                             JsonObject config = currentDrive.getConfig();
                             String targetPath = selectedItem.getAccessingPathStr() + selectedItem.name;
                             playFile(config.get("url").getAsString() + targetPath);
@@ -266,6 +275,26 @@ public class DriveActivity extends BaseActivity {
         setLoadSir(findViewById(R.id.mLayout));
     }
 
+    private void playFile(List<String> files,int index) {
+        VodInfo vodInfo = new VodInfo();
+        vodInfo.name = "存储";
+        vodInfo.playFlag = "drive";
+        vodInfo.seriesFlags = new ArrayList<>();
+        vodInfo.seriesFlags.add(new VodInfo.VodSeriesFlag("drive"));
+        vodInfo.seriesMap = new LinkedHashMap<>();
+        List<VodInfo.VodSeries> seriesList = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
+            VodInfo.VodSeries series = new VodInfo.VodSeries(files.get(i), "tvbox-drive://" + files.get(i));
+            seriesList.add(series);
+        }
+        vodInfo.playIndex = index;
+        vodInfo.seriesMap.put("drive", seriesList);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("newSource", true);
+        bundle.putString("sourceKey", "_drive");
+        bundle.putSerializable("VodInfo", vodInfo);
+        jumpActivity(PlayActivity.class, bundle);
+    }
     private void playFile(String fileUrl) {
         VodInfo vodInfo = new VodInfo();
         vodInfo.name = "存储";
