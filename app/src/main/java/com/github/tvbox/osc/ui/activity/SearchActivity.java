@@ -278,12 +278,8 @@ public class SearchActivity extends BaseActivity {
      * 拼音联想
      */
     private void loadRec(String key) {
-        OkGo.<String>get("https://s.video.qq.com/smartbox")
-                .params("plat", 2)
-                .params("ver", 0)
-                .params("num", 10)
-                .params("otype", "json")
-                .params("query", key)
+        OkGo.<String>get("http://suggest.video.iqiyi.com/?key=cyjm")
+                .params("key", key)
                 .execute(new AbsCallback<String>() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -291,10 +287,10 @@ public class SearchActivity extends BaseActivity {
                             ArrayList<String> hots = new ArrayList<>();
                             String result = response.body();
                             JsonObject json = JsonParser.parseString(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1)).getAsJsonObject();
-                            JsonArray itemList = json.get("item").getAsJsonArray();
+                            JsonArray itemList = json.get("data").getAsJsonArray();
                             for (JsonElement ele : itemList) {
                                 JsonObject obj = (JsonObject) ele;
-                                hots.add(obj.get("word").getAsString().trim());
+                                hots.add(obj.get("name").getAsString().trim());
                             }
                             wordAdapter.setNewData(hots);
                         } catch (Throwable th) {
